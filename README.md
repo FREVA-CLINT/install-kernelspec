@@ -1,6 +1,8 @@
-# Install Kernelspec
+# Install Kernel Specifications into userspace
 
 This code installs jupyter kernels for different languages in the user space.
+Once the kernel has been installed it can be used on the [jupyter-hub server](https://jupyterhub.dkrz.de/)
+of DKRZ
 
 ## Installation
 ```python
@@ -27,7 +29,7 @@ options:
                         The display name of the kernel (default: None)
 ```
 
-currently supported kernels are:
+The following kernel specifications are supported:
 - python3
 - gnuR
 - bash

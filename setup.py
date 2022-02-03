@@ -32,9 +32,10 @@ setup(name=NAME,
       license="GPLv3",
       packages=find_packages("src"),
       package_dir={"": "src"},
-      entry_points={"console_scripts": ["kernel-install = kernel_install.cli:main"]},
+      entry_points={"console_scripts": ["kernel-install = kernel_install.cli:cli"]},
       install_requires=[
           "argparse",
+          "bash_kernel",
           "ipykernel"
       ],
       python_requires='>=3.8',

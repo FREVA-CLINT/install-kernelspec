@@ -1,8 +1,8 @@
 # Install Kernel Specifications into userspace
 
-This code installs jupyter kernels for different languages in the user space.
+This code installs jupyter kernels for different languages into the user space.
 Once the kernel has been installed it can be used on the [jupyter-hub server](https://jupyterhub.dkrz.de/)
-of DKRZ
+of DKRZ.
 
 ## Installation
 ```python
@@ -42,7 +42,7 @@ kernel-install r --name r-regiklim --display-name "R for Regiklim"
 
 ### Using the python library
 
-Example for programatically installing a bash kernel:
+Example for programmatically installing a bash kernel:
 
 ```python
 import kernel_install as ki

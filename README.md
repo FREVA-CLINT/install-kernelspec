@@ -14,8 +14,8 @@ python3 -m pip install git+https://gitlab.dkrz.de/k204230/install-kernelspec.git
 ### Using the command line interface (cli):
 
 ```bash
-kernel-install --help
-usage: kernel-install [-h] [--name NAME] [--display-name DISPLAY_NAME] language
+jupyter-kernel-install --help
+usage: jupyter-kernel-install [-h] [--name NAME] [--display-name DISPLAY_NAME] language
 
 Install jupyter kernel specs of different languages.
 
@@ -48,4 +48,3 @@ Example for programmatically installing a bash kernel:
 import kernel_install as ki
 ki.bash(name="bash-regiklim", display_name="bash kernel")
 ```
-

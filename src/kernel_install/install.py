@@ -45,7 +45,7 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
     name = name or "r"
     display_name = display_name or name
     cmd = (
-            f"{Path(sys.executable).parent / 'Rscript'} "
+            "Rscript "
             "--default-packages=IRkernel "
             "-e "
             f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'"""

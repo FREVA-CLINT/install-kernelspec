@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Callable
 import sys
 from .install import __all__ as methods
+from ._version import __version__
 
 
 def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
@@ -28,6 +29,13 @@ def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
         "-d",
         help="The display name of the kernel",
     )
+    ap.add_argument(
+        "--version",
+        "-V",
+        help="Display version and exit",
+        action="version",
+        version="%(prog)s {version}".format(version=__version__),
+    )
     args = ap.parse_args(argv)
     args.name = args.name or args.language
     return dict(
@@ -46,7 +54,6 @@ def get_method(method: str) -> Callable[str, Path]:
 
 
 def cli(argv: Optional[List[str]] = None):
-
     config = parse_args(argv or sys.argv[1:])
     kernel_file = get_method(config["language"])(config["name"], config["display_name"])
     print(f"Kernel has been successfully installed to {kernel_file}")

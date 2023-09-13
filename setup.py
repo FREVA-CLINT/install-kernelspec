@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Setup script for packaging checkin."""
 
-import json
 from pathlib import Path
 from setuptools import setup, find_packages
 
@@ -21,7 +20,7 @@ def find_version(pck_name: str = "kernel_install"):
     with vers_file.open() as f:
         for line in f.readlines():
             if "__version__" in line:
-                return json.loads(line.split("=")[-1].strip())
+                return line.split("=")[-1].strip()
 
 
 setup(

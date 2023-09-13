@@ -20,7 +20,12 @@ def find_version(pck_name: str = "kernel_install"):
     with vers_file.open() as f:
         for line in f.readlines():
             if "__version__" in line:
-                return line.split("=")[-1].strip()
+                version = [
+                    v.strip()
+                    for v in line.split("=")[-1].strip().split(".")
+                    if v.strip()
+                ]
+                return version
 
 
 setup(

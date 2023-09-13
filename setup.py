@@ -2,6 +2,7 @@
 """Setup script for packaging checkin."""
 
 from pathlib import Path
+import re
 from setuptools import setup, find_packages
 
 
@@ -15,22 +16,18 @@ def read(*parts):
         return f.read()
 
 
-def find_version(pck_name: str = "kernel_install"):
-    vers_file = Path(__file__).parent / "src" / pck_name / "__init__.py"
-    with vers_file.open() as f:
-        for line in f.readlines():
-            if "__version__" in line:
-                version = [
-                    v.strip()
-                    for v in line.split("=")[-1].strip().split(".")
-                    if v.strip()
-                ]
-                return version
+def find_version(*parts):
+    """The the version in a given file."""
+    vers_file = read(*parts)
+    match = re.search(r'^__version__ = "(\d+.\d+.\d+)"', vers_file, re.M)
+    if match is not None:
+        return match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 
 setup(
     name=NAME,
-    version=find_version(NAME),
+    version=find_version("src", "kernel_install", "_version.py"),
     author="Martin Bergemann",
     author_email="bergemann@dkrz.de",
     maintainer="Martin Bergemann",

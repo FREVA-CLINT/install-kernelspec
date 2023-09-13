@@ -75,7 +75,9 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
         "-e "
         f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'"""
     )
-    env = get_env("EVALUATION_SYSTEM_CONFIG_FILE")
+    env = get_env(
+        "EVALUATION_SYSTEM_CONFIG_FILE", "EVALUATION_SYSTEM_CONFIG_DIR"
+    )
     env.setdefault("env", {})
     ld_lib_path = get_ld_library_path_from_bin("R")
     if ld_lib_path:
@@ -108,5 +110,4 @@ def python(name: str = "python3", display_name: Optional[str] = None) -> Path:
 
 
 if __name__ == "__main__":
-
     print(get_ld_library_path_from_bin("R"))

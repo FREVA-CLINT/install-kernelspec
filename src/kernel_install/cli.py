@@ -1,9 +1,16 @@
+"""Main command line interface."""
+
 import argparse
-from pathlib import Path
-from typing import Dict, List, Optional, Callable
 import sys
+from pathlib import Path
+from typing import cast, Callable, Dict, List, Optional
+
+from rich import print as pprint
+from rich_argparse import ArgumentDefaultsRichHelpFormatter
+
+from kernel_install import __version__, install
+
 from .install import __all__ as methods
-from ._version import __version__
 
 
 def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
@@ -12,7 +19,7 @@ def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
     ap = argp(
         prog="jupyter-kernel-install",
         description="Install jupyter kernel specs of different languages.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        formatter_class=ArgumentDefaultsRichHelpFormatter,
     )
     ap.add_argument(
         "language",
@@ -34,29 +41,30 @@ def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
         "-V",
         help="Display version and exit",
         action="version",
-        version="%(prog)s {version}".format(version=__version__),
+        version=f"%(prog)s {__version__}",
     )
     args = ap.parse_args(argv)
     args.name = args.name or args.language
-    return dict(
-        language=args.language,
-        name=args.name,
-        display_name=args.display_name or args.name,
-    )
+    return {
+        "language": args.language,
+        "name": args.name,
+        "display_name": args.display_name or args.name,
+    }
 
 
-def get_method(method: str) -> Callable[str, Path]:
+def get_method(method: str) -> Callable[[str, str], Path]:
     """Get the correct install method."""
 
-    from kernel_install import install
-
-    return getattr(install, method)
+    return cast(Callable[[str, str], Path], getattr(install, method))
 
 
-def cli(argv: Optional[List[str]] = None):
+def cli(argv: Optional[List[str]] = None) -> None:
+    """The main cli message."""
     config = parse_args(argv or sys.argv[1:])
-    kernel_file = get_method(config["language"])(config["name"], config["display_name"])
-    print(f"Kernel has been successfully installed to {kernel_file}")
+    kernel_file = get_method(config["language"])(
+        config["name"], config["display_name"]
+    )
+    pprint(f"Kernel has been successfully installed to [b]{kernel_file}[/b]")
 
 
 if __name__ == "__main__":

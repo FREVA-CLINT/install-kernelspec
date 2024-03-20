@@ -3,7 +3,7 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import cast, Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, cast
 
 from rich import print as pprint
 from rich_argparse import ArgumentDefaultsRichHelpFormatter

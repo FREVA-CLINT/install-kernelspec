@@ -1,0 +1,84 @@
+[build-system]
+requires = ["flit_core >=3.2"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "kernel-install"
+authors = [{name = "DKRZ, Clint", email = "freva@dkrz.de"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+               "Development Status :: 2 - Beta",
+               "Environment :: Console",
+               "Intended Audience :: Developers",
+               "Intended Audience :: Science/Research",
+               "License :: OSI Approved :: BSD License",
+               "Operating System :: POSIX :: Linux",
+               "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+description = "Utility to install various jupyter kernel specs."
+requires-python = ">=3.8"
+dependencies = [
+             "bash_kernel",
+             "ipykernel",
+             "rich",
+             "rich-argparse",
+]
+[project.optional-dependencies]
+dev = ["flit", "tox"]
+
+
+[project.urls]
+Documentation = "https://github.com/FREVA-CLINT/install-kernelspec/README.md"
+Issues = "https://github.com/FREVA-CLINT/install-kernelspec/issues"
+Source = "https://github.com/FREVA-CLINT/install-kernelspec"
+Home= "https://github.com/FREVA-CLINT/install-kernelspec"
+
+
+[project.scripts]
+jupyter-kernel-install = "kernel_install.cli:cli"
+
+[tool.mypy]
+files = "src/kernel_install"
+strict = true
+warn_unused_ignores = true
+warn_unreachable = true
+show_error_codes = true
+install_types = true
+non_interactive = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+
+
+
+[package-data]
+freva_deployment = ["py.typed"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+min_version = 4.0
+env_list = types, lint
+[testenv]
+parallel_show_output = false
+[testenv:lint]
+deps = .
+       black
+       isort
+       flake8
+       pylint
+commands =
+    isort --check --profile black -t py311 -l 79 src
+    flake8 src/kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
+    pylint src/kernel_install/
+[testenv:types]
+deps = .
+       mypy
+commands = mypy --install-types --non-interactive
+"""

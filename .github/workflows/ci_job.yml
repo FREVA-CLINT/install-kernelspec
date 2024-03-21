@@ -1,7 +1,7 @@
 name: CLI Test
 run-name: ${{ github.actor }} is testing the cli 🧉
 
-on: [push]
+on: [push, workflow_call]
 jobs:
   linting:
     name: Basic check lint
@@ -41,32 +41,6 @@ jobs:
           auto-activate-base: false
       - name: Running tests with tox
         run: tox -e test -q
-  codecov:
-    defaults:
-      run:
-        shell: bash -l {0}
-    needs: [testing, linting]
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
-    name: Codecoverage check
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setting up mamba
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: install-kernelspec
-          environment-file: environment.yml
-          auto-activate-base: false
-      - name: Running tests with tox
-        run: tox -e test -q
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
-          verbose: true
-          flags: unittests
 
   dependabot:
     name: Merge PR by dependabot
@@ -83,9 +57,9 @@ jobs:
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.TOKEN}}
+          GITHUB_TOKEN: ${{secrets.DEPENDABOT_TOKEN}}
       - name: Auto-merge for dependabot's PR
         run: gh pr merge --merge --auto "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.TOKEN}}
+          GITHUB_TOKEN: ${{secrets.DEPENDABOT_TOKEN}}

@@ -2,7 +2,6 @@ name: install-kernelspec
 channels:
   - conda-forge
 dependencies:
-  - python
   - r-base
   - r-essentials
   - pip

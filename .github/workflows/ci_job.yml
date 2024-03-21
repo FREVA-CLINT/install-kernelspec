@@ -29,20 +29,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: mamba-org/setup-micromamba@v1
+      - name: Setting up mamba
+        uses: mamba-org/setup-micromamba@v1
         with:
-          create-args: >
-            -n mamba${{matrix.python-version}}
-            -c conda-forge
-            python=${{ matrix.python-version }}
-            tox
-            pip
-            r-base
-            r-essentials
+          environment-file: environment.yml
           init-shell: >
             bash
+      - name: Setup python ${{matrix.python-version}}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{matrix.python-version}}
+      - name: Installing tox
+        run: python -m pip install tox
       - name: Running tests with tox
-        run: mamba run -n mamba${{matrix.python-version}} tox -e test -q
+        run: tox -e test -q
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

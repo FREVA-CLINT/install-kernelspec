@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [v2404.0.0]
+## [v2404.0.1]
 ### Added
 - Initial release of the project.
 

@@ -10,7 +10,7 @@ of DKRZ.
 
 ## Installation
 ```python
-python3 -m pip install git+https://gitlab.dkrz.de/k204230/install-kernelspec.git
+python3 -m pip install kernel-install
 ```
 
 ## Usage

@@ -49,14 +49,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Python 3
+      - name: Setting up mamba
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: "3.X"
-        uses: actions/setup-python@v5
-      - name: Install packages
-        run: |
-          python3 -m pip install tox
-      - name: Checking code coverage.
+          activate-environment: install-kernelspec
+          environment-file: environment.yml
+          auto-activate-base: false
+      - name: Running tests with tox
         run: tox -e test -q
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

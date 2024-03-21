@@ -27,8 +27,7 @@ dependencies = [
              "rich-argparse",
 ]
 [project.optional-dependencies]
-dev = ["flit", "tox"]
-tests = ["pytest", "pytest-cov", "pytest-mock", "mock", "pytest-env"]
+dev = ["tox", "flit", "pytest", "pytest-cov", "pytest-mock", "mock", "pytest-env"]
 
 
 [project.urls]
@@ -70,14 +69,16 @@ env_list = types, lint, test
 [testenv]
 parallel_show_output = false
 [testenv:test]
-deps = -e .[tests]
+deps = -c {toxinidir}/.github/dependabot/constraints.txt
+       -e .[dev]
 
 commands =
-    pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
+    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
     python3 -m coverage report --fail-under=98.5 --precision=2
 
 [testenv:lint]
-deps = .[tests]
+deps = -c {toxinidir}/.github/dependabot/contraints.txt
+       .[dev]
        black
        isort
        flake8
@@ -87,7 +88,7 @@ commands =
     flake8 src/kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
     pylint src/kernel_install --fail-under 9
 [testenv:types]
-deps = .[tests]
+deps = .[dev]
        mypy
        pytest-stub
 commands = mypy --install-types --non-interactive

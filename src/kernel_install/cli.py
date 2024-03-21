@@ -61,7 +61,5 @@ def get_method(method: str) -> Callable[[str, str], Path]:
 def cli(argv: Optional[List[str]] = None) -> None:
     """The main cli message."""
     config = parse_args(argv or sys.argv[1:])
-    kernel_file = get_method(config["language"])(
-        config["name"], config["display_name"]
-    )
+    kernel_file = get_method(config["language"])(config["name"], config["display_name"])
     pprint(f"Kernel has been successfully installed to [b]{kernel_file}[/b]")

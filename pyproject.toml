@@ -77,8 +77,7 @@ commands =
     python3 -m coverage report --fail-under=98.5 --precision=2
 
 [testenv:lint]
-deps = -c {toxinidir}/.github/dependabot/contraints.txt
-       .[dev]
+deps = .[dev]
        black
        isort
        flake8

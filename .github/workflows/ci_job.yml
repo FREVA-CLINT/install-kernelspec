@@ -41,7 +41,8 @@ jobs:
           auto-activate-base: false
       - name: Running tests with tox
         run: tox -e test -q
-
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
   dependabot:
     name: Merge PR by dependabot
     runs-on: ubuntu-latest

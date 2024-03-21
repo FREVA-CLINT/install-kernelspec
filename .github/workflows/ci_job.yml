@@ -32,6 +32,7 @@ jobs:
       - uses: mamba-org/setup-micromamba@v1
         with:
           create-args: >
+            -n mamba${{matrix.python-version}}
             -c conda-forge
             python=${{ matrix.python-version }}
             tox
@@ -40,10 +41,8 @@ jobs:
             r-essentials
           init-shell: >
             bash
-          cache-environment: true
-          post-cleanup: 'all'
       - name: Running tests with tox
-        run: tox -e test -q
+        run: mamba run -n mamba${{matrix.python-version}} tox -e test -q
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

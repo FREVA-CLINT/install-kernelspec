@@ -1,0 +1,9 @@
+name: install-kernelspec
+channels:
+  - conda-forge
+dependencies:
+  - r-base
+  - r-essentials
+  - pip
+  - pip:
+      - -e .[dev]

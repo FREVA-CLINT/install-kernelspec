@@ -1,0 +1,104 @@
+[build-system]
+requires = ["flit_core >=3.2"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "kernel-install"
+authors = [{name = "DKRZ, Clint", email = "freva@dkrz.de"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+               "Development Status :: 2 - Beta",
+               "Environment :: Console",
+               "Intended Audience :: Developers",
+               "Intended Audience :: Science/Research",
+               "License :: OSI Approved :: BSD License",
+               "Operating System :: POSIX :: Linux",
+               "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+description = "Utility to install various jupyter kernel specs."
+requires-python = ">=3.8"
+dependencies = [
+             "appdirs",
+             "bash_kernel",
+             "ipykernel",
+             "rich",
+             "rich-argparse",
+]
+[project.optional-dependencies]
+dev = ["tox", "flit", "pytest", "pytest-cov", "pytest-mock", "mock", "pytest-env"]
+
+
+[project.urls]
+Documentation = "https://github.com/FREVA-CLINT/install-kernelspec/README.md"
+Issues = "https://github.com/FREVA-CLINT/install-kernelspec/issues"
+Source = "https://github.com/FREVA-CLINT/install-kernelspec"
+Home= "https://github.com/FREVA-CLINT/install-kernelspec"
+
+
+[project.scripts]
+jupyter-kernel-install = "kernel_install.cli:cli"
+
+[tool.mypy]
+files = "src/kernel_install"
+strict = true
+warn_unused_ignores = true
+warn_unreachable = true
+show_error_codes = true
+install_types = true
+non_interactive = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+
+
+
+[package-data]
+freva_deployment = ["py.typed"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+min_version = 4.0
+env_list = types, lint, test
+[testenv]
+parallel_show_output = false
+[testenv:test]
+deps = -c {toxinidir}/.github/dependabot/constraints.txt
+       -e .[dev]
+
+commands =
+    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
+    python3 -m coverage report --fail-under=98.5 --precision=2
+
+[testenv:lint]
+deps = .[dev]
+       black
+       isort
+       flake8
+       pylint
+commands =
+    isort --check --profile black -t py312 -l 79 src
+    flake8 src/kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
+    pylint src/kernel_install --fail-under 9
+[testenv:types]
+deps = .[dev]
+       mypy
+       pytest-stub
+commands = mypy --install-types --non-interactive
+[testenv:release]
+deps = git-python
+       packaging
+       requests
+       tomli
+commands = python3 bump.py tag kernel_install -b main
+allowlist_externals = rm
+                      curl
+commands_pre = curl -H 'Cache-Control: no-cache' -Ls -o bump.py https://raw.githubusercontent.com/FREVA-CLINT/freva-deployment/versions/release.py
+commands_post = rm bump.py
+"""

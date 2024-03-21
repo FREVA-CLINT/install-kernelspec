@@ -1,6 +1,7 @@
 """Definition of install methods."""
 
 import json
+import logging
 import os
 import shutil
 from pathlib import Path
@@ -12,7 +13,6 @@ import appdirs
 from bash_kernel.install import kernel_json
 from ipykernel.kernelspec import install as install_kernel
 from jupyter_client.kernelspec import KernelSpecManager
-import logging
 
 logging.basicConfig(
     format="%(name)s - %(asctime)s - %(levelname)s: %(message)s",
@@ -33,7 +33,8 @@ def _install_rkernel(name: str, display_name: str) -> None:
     prefix = Path(appdirs.user_data_dir()).parent
     args = f'name="{name}", displayname="{display_name}", prefix="{prefix}"'
     commands = [
-        'install.packages(c("IRkernel"), repos="http://cran.us.r-project.org")',
+        'install.packages(c("IRkernel"), repos="http://cran.us.r-project.org"'
+        ', lib="~/R/library"',
         'library("IRkernel")',
         f"IRkernel::installspec({args})",
     ]

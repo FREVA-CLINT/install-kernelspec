@@ -21,6 +21,7 @@ jobs:
   testing:
     env:
       NUMEXPR_MAX_THREADS: 8
+      JUPYTER_PLATFORM_DIRS: 1
     runs-on: ubuntu-latest
     strategy:
       matrix:

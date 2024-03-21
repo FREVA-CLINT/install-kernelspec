@@ -33,6 +33,7 @@ def _install_rkernel(name: str, display_name: str) -> None:
     prefix = Path(appdirs.user_data_dir()).parent
     args = f'name="{name}", displayname="{display_name}", prefix="{prefix}"'
     commands = [
+        'dir.create("~/R/library", recursive = TRUE)',
         'install.packages(c("IRkernel"), repos="http://cran.us.r-project.org"'
         ', lib="~/R/library"',
         'library("IRkernel")',

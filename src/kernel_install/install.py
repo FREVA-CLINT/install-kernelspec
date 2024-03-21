@@ -35,7 +35,7 @@ def _install_rkernel(name: str, display_name: str) -> None:
     commands = [
         'dir.create("~/R/library", recursive = TRUE)',
         'install.packages(c("IRkernel"), repos="http://cran.us.r-project.org"'
-        ', lib="~/R/library"',
+        ', lib="~/R/library")',
         'library("IRkernel")',
         f"IRkernel::installspec({args})",
     ]

@@ -42,6 +42,9 @@ jobs:
       - name: Running tests with tox
         run: tox -e test -q
   codecov:
+    defaults:
+      run:
+        shell: bash -l {0}
     needs: [testing, linting]
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login != 'dependabot[bot]'

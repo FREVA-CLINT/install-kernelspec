@@ -18,6 +18,34 @@ __all__ = ["bash", "r", "python"]
 KERNEL_DIR = Path(appdirs.user_data_dir("jupyter")) / "kernels"
 
 
+def _install_rkernel(name: str, display_name: str) -> None:
+    """Install the r kernel."""
+    cmd1 = ["Rscript", "-e", """'install.packages("IRkernel")'"""]
+    cmd2 = [
+        "Rscript",
+        "--default-packages=IRkernel",
+        "-e",
+        f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'""",
+    ]
+    for cmd in (cmd1, cmd2):
+        try:
+            res = run(
+                cmd, stdout=PIPE, stderr=PIPE, check=False, encoding="utf-8"
+            )
+            return_code = res.returncode
+            stdout, stderr = res.stdout, res.stderr
+        except (NotADirectoryError, FileNotFoundError):
+            return_code = 1
+            stdout, stderr = "", f"{cmd[0]}: No such file or directory"
+        if return_code != 0:
+            raise CalledProcessError(
+                return_code,
+                " ".join(cmd),
+                output=stdout,
+                stderr=stderr,
+            )
+
+
 def get_ld_library_path_from_bin(binary: str) -> Optional[str]:
     """Get the standard LD_LIBRARY_PATH from a binary."""
     bin_path = shutil.which(binary)
@@ -69,12 +97,6 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
     """Install gnuR kernel spec."""
     name = name or "r"
     display_name = display_name or name
-    cmd = (
-        "Rscript "
-        "--default-packages=IRkernel "
-        "-e "
-        f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'"""
-    )
     env = get_env(
         "EVALUATION_SYSTEM_CONFIG_FILE",
         "EVALUATION_SYSTEM_CONFIG_DIR",
@@ -84,9 +106,7 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
     if ld_lib_path and "LD_LIBRARY_PATH" not in env:
         env["LD_LIBRARY_PATH"] = ld_lib_path
 
-    res = os.system(cmd)
-    if res != 0:
-        raise CalledProcessError(res, cmd)
+    _install_rkernel(name, display_name)
     kernel = json.loads((KERNEL_DIR / name / "kernel.json").read_text())
     with (KERNEL_DIR / name / "kernel.json").open("w", encoding="utf-8") as f:
         kernel["env"] = env

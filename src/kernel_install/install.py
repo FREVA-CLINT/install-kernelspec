@@ -20,12 +20,13 @@ KERNEL_DIR = Path(appdirs.user_data_dir("jupyter")) / "kernels"
 
 def _install_rkernel(name: str, display_name: str) -> None:
     """Install the r kernel."""
+    args = f'name="{name}", displayname="{display_name}", user=TRUE'
     cmd1 = ["Rscript", "-e", """'install.packages("IRkernel")'"""]
     cmd2 = [
         "Rscript",
         "--default-packages=IRkernel",
         "-e",
-        f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'""",
+        f"""'IRkernel::installspec({args})'""",
     ]
     for cmd in (cmd1, cmd2):
         try:

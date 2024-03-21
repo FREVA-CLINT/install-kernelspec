@@ -38,8 +38,8 @@ jobs:
             pip
             r-base
             r-essentials
-        init-shell: >
-           bash
+          init-shell: >
+            bash
         cache-environment: true
         post-cleanup: 'all'
       - name: Running tests with tox

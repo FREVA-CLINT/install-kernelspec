@@ -42,7 +42,7 @@ jobs:
       - name: Installing tox
         run: python -m pip install tox
       - name: Running tests with tox
-        run: tox -e test -q
+        run: mumba run -n install-kernelspec tox -e test -q
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

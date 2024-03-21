@@ -65,7 +65,3 @@ def cli(argv: Optional[List[str]] = None) -> None:
         config["name"], config["display_name"]
     )
     pprint(f"Kernel has been successfully installed to [b]{kernel_file}[/b]")
-
-
-if __name__ == "__main__":
-    cli()

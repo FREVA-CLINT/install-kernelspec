@@ -20,6 +20,7 @@ dynamic = ["version"]
 description = "Utility to install various jupyter kernel specs."
 requires-python = ">=3.8"
 dependencies = [
+             "appdirs",
              "bash_kernel",
              "ipykernel",
              "rich",
@@ -67,6 +68,19 @@ min_version = 4.0
 env_list = types, lint
 [testenv]
 parallel_show_output = false
+[testenv:test]
+deps = -e .
+       pytest
+       pytest-asyncio
+       pytest-cov
+       pytest-mock
+       mock
+       pytest-env
+
+commands =
+    pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
+    python3 -m coverage report --fail-under=98.5 --precision=2
+
 [testenv:lint]
 deps = .
        black
@@ -80,5 +94,6 @@ commands =
 [testenv:types]
 deps = .
        mypy
+       pytest-stub
 commands = mypy --install-types --non-interactive
 """

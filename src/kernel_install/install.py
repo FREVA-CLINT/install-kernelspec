@@ -8,13 +8,14 @@ from subprocess import PIPE, CalledProcessError, run
 from tempfile import TemporaryDirectory
 from typing import Dict, Optional
 
+import appdirs
 from bash_kernel.install import kernel_json
 from ipykernel.kernelspec import install as install_kernel
 from jupyter_client.kernelspec import KernelSpecManager
 
 __all__ = ["bash", "r", "python"]
 
-KERNEL_DIR = Path("~/.local/share/jupyter/kernels").expanduser()
+KERNEL_DIR = Path(appdirs.user_data_dir("jupyter")) / "kernels"
 
 
 def get_ld_library_path_from_bin(binary: str) -> Optional[str]:
@@ -22,17 +23,17 @@ def get_ld_library_path_from_bin(binary: str) -> Optional[str]:
     bin_path = shutil.which(binary)
     if bin_path is None:
         return None
-    python_path = Path(bin_path).parent / "python"
-    res = run(
-        [str(python_path), "-c", "import sys; print(sys.exec_prefix)"],
-        check=True,
-        stdout=PIPE,
-        stderr=PIPE,
-    )
-
-    out = res.stdout.decode("utf-8").splitlines()[0]
-    if out:
-        return str(Path(out) / "lib")
+    for path in ("python", "python3"):
+        python_path = Path(bin_path).parent / path
+        if python_path.is_file():
+            res = run(
+                [str(python_path), "-c", "import sys; print(sys.exec_prefix)"],
+                check=True,
+                stdout=PIPE,
+                stderr=PIPE,
+            )
+            out = res.stdout.decode("utf-8").splitlines()[0]
+            return str(Path(out) / "lib")
     return None
 
 
@@ -55,8 +56,7 @@ def bash(name: str = "bash", display_name: Optional[str] = None) -> Path:
     env = get_env(
         "EVALUATION_SYSTEM_CONFIG_FILE", "EVALUATION_SYSTEM_CONFIG_DIR", "PATH"
     )
-    if env:
-        kernel_json["env"] = env
+    kernel_json["env"] = env
     with TemporaryDirectory() as td:
         os.chmod(td, 0o755)  # Starts off as 700, not user readable
         with open(os.path.join(td, "kernel.json"), "w", encoding="utf-8") as f:
@@ -76,10 +76,12 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
         f"""'IRkernel::installspec(name="{name}", displayname="{display_name}")'"""
     )
     env = get_env(
-        "EVALUATION_SYSTEM_CONFIG_FILE", "EVALUATION_SYSTEM_CONFIG_DIR"
+        "EVALUATION_SYSTEM_CONFIG_FILE",
+        "EVALUATION_SYSTEM_CONFIG_DIR",
+        "LD_LIBRARY_PATH",
     )
     ld_lib_path = get_ld_library_path_from_bin("R")
-    if ld_lib_path:
+    if ld_lib_path and not "LD_LIBRARY_PATH" in env:
         env["LD_LIBRARY_PATH"] = ld_lib_path
 
     res = os.system(cmd)
@@ -94,9 +96,9 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
 
 def python(name: str = "python3", display_name: Optional[str] = None) -> Path:
     """Install python3 kernel spec."""
-
     env_kw = get_env(
-        "EVALUATION_SYSTEM_CONFIG_FILE", "EVALUATION_SYSTEM_CONFIG_DIR"
+        "EVALUATION_SYSTEM_CONFIG_FILE",
+        "EVALUATION_SYSTEM_CONFIG_DIR",
     )
     path = install_kernel(
         user=True,
@@ -105,7 +107,3 @@ def python(name: str = "python3", display_name: Optional[str] = None) -> Path:
         env=env_kw,
     )
     return Path(path)
-
-
-if __name__ == "__main__":
-    print(get_ld_library_path_from_bin("R"))

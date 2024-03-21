@@ -1,7 +1,7 @@
 name: CLI Test
 run-name: ${{ github.actor }} is testing the cli 🧉
 
-on: [push]
+on: [push, workflow_call]
 jobs:
   linting:
     name: Basic check lint

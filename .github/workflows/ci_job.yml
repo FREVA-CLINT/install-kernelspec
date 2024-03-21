@@ -46,7 +46,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          slug: FREVA-CLINT/install-kernelspec
           verbose: true
           flags: unittests
 

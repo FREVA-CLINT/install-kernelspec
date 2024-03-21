@@ -61,11 +61,12 @@ def _install_rkernel(name: str, display_name: str) -> None:
             stdout, stderr = "", "Rscript: No such file or directory"
         if return_code != 0:
             logger.error(
-                "Script failed with status %i:\n\n%s",
+                "Failed with status %i:\n\n%s\n\nSTDERR:\n%s\n\nSTDOUT\n%s",
                 return_code,
                 exec_path.read_text(),
+                stderr,
+                stdout,
             )
-            logger.error("STDERR:\n%s\nSTDOUT:\n%s", stderr, stdout)
             raise CalledProcessError(
                 return_code,
                 "Rscript --verbose",

@@ -81,7 +81,7 @@ def r(name: str = "r", display_name: Optional[str] = None) -> Path:
         "LD_LIBRARY_PATH",
     )
     ld_lib_path = get_ld_library_path_from_bin("R")
-    if ld_lib_path and not "LD_LIBRARY_PATH" in env:
+    if ld_lib_path and "LD_LIBRARY_PATH" not in env:
         env["LD_LIBRARY_PATH"] = ld_lib_path
 
     res = os.system(cmd)

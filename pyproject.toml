@@ -28,6 +28,7 @@ dependencies = [
 ]
 [project.optional-dependencies]
 dev = ["flit", "tox"]
+tests = ["pytest", "pytest-cov", "pytest-mock", "mock", "pytest-env"]
 
 
 [project.urls]
@@ -65,34 +66,28 @@ freva_deployment = ["py.typed"]
 legacy_tox_ini = """
 [tox]
 min_version = 4.0
-env_list = types, lint
+env_list = types, lint, test
 [testenv]
 parallel_show_output = false
 [testenv:test]
-deps = -e .
-       pytest
-       pytest-asyncio
-       pytest-cov
-       pytest-mock
-       mock
-       pytest-env
+deps = -e .[tests]
 
 commands =
     pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
     python3 -m coverage report --fail-under=98.5 --precision=2
 
 [testenv:lint]
-deps = .
+deps = .[tests]
        black
        isort
        flake8
        pylint
 commands =
-    isort --check --profile black -t py311 -l 79 src
+    isort --check --profile black -t py312 -l 79 src
     flake8 src/kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
-    pylint src/kernel_install/
+    pylint src/kernel_install --fail-under 9
 [testenv:types]
-deps = .
+deps = .[tests]
        mypy
        pytest-stub
 commands = mypy --install-types --non-interactive

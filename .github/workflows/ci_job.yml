@@ -40,8 +40,8 @@ jobs:
             r-essentials
           init-shell: >
             bash
-        cache-environment: true
-        post-cleanup: 'all'
+          cache-environment: true
+          post-cleanup: 'all'
       - name: Running tests with tox
         run: tox -e test -q
       - name: Upload coverage to Codecov

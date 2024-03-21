@@ -1,5 +1,9 @@
 # Install Kernel Specifications into userspace
 
+[![Pipeline](https://github.com/FREVA-CLINT/install-kernlespec/actions/workflows/ci_job.yml/badge.svg)](https://github.com/FREVA-CLINT/install-kernelspec/actions)
+[![codecov](https://codecov.io/gh/FREVA-CLINT/install-kernelspec/graph/badge.svg?token=90RyY5I9AI)](https://codecov.io/gh/FREVA-CLINT/install-kernelspec)
+[![BSD](https://anaconda.org/conda-forge/freva/badges/license.svg)](https://github.com/FREVA-CLINT/install-kernelspec/LICENSE)
+
 This code installs jupyter kernels for different languages into the user space.
 Once the kernel has been installed it can be used on the [jupyter-hub server](https://jupyterhub.dkrz.de/)
 of DKRZ.

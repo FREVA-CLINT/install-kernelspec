@@ -1,13 +1,12 @@
 """Definition of install methods."""
 
-from functools import partial
 import json
-import logging
 import os
 import shutil
+from functools import partial
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, run
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 from typing import Dict, List, Optional
 
 import appdirs
@@ -66,9 +65,7 @@ def _get_rlib() -> List[Path]:
         script_path = Path(temp_file.name)
         script_path.write_text("cat(.libPaths(), sep='\n')")
         out = _execute_r_script(script_path)
-    paths = [
-        Path(path.strip()) for path in out.strip().split("\n") if path.strip()
-    ]
+    paths = [Path(path.strip()) for path in out.strip().split("\n") if path.strip()]
     logger.debug("Found the following library paths:\n%s", paths)
     return paths
 

@@ -1,6 +1,7 @@
 """Main command line interface."""
 
 import argparse
+import logging
 import sys
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, cast
@@ -11,6 +12,7 @@ from rich_argparse import ArgumentDefaultsRichHelpFormatter
 from kernel_install import __version__, install
 
 from .install import __all__ as methods
+from .logger import logger, logger_stream_handle
 
 
 def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
@@ -37,6 +39,9 @@ def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
         help="The display name of the kernel",
     )
     ap.add_argument(
+        "-v", "--verbose", action="count", help="Verbosity level", default=0
+    )
+    ap.add_argument(
         "--version",
         "-V",
         help="Display version and exit",
@@ -45,6 +50,12 @@ def parse_args(argv: Optional[List[str]]) -> Dict[str, str]:
     )
     args = ap.parse_args(argv)
     args.name = args.name or args.language
+    log_level = max(
+        logger.getEffectiveLevel() - 10 * args.verbose, logging.DEBUG
+    )
+
+    logger.setLevel(log_level)
+    logger_stream_handle.setLevel(log_level)
     return {
         "language": args.language,
         "name": args.name,
@@ -61,5 +72,7 @@ def get_method(method: str) -> Callable[[str, str], Path]:
 def cli(argv: Optional[List[str]] = None) -> None:
     """The main cli message."""
     config = parse_args(argv or sys.argv[1:])
-    kernel_file = get_method(config["language"])(config["name"], config["display_name"])
+    kernel_file = get_method(config["language"])(
+        config["name"], config["display_name"]
+    )
     pprint(f"Kernel has been successfully installed to [b]{kernel_file}[/b]")

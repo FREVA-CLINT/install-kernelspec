@@ -12,6 +12,15 @@ import appdirs
 from bash_kernel.install import kernel_json
 from ipykernel.kernelspec import install as install_kernel
 from jupyter_client.kernelspec import KernelSpecManager
+import logging
+
+logging.basicConfig(
+    format="%(name)s - %(asctime)s - %(levelname)s: %(message)s",
+    level=logging.ERROR,
+    datefmt="[%X]",
+)
+logger = logging.getLogger("install-kernel")
+
 
 __all__ = ["bash", "r", "python"]
 
@@ -20,28 +29,41 @@ KERNEL_DIR = Path(appdirs.user_data_dir("jupyter")) / "kernels"
 
 def _install_rkernel(name: str, display_name: str) -> None:
     """Install the r kernel."""
-    args = f'name="{name}", displayname="{display_name}", user=TRUE'
-    cmd1 = ["Rscript", "-e", """'install.packages("IRkernel")'"""]
-    cmd2 = [
-        "Rscript",
-        "--default-packages=IRkernel",
-        "-e",
-        f"""'IRkernel::installspec({args})'""",
+    KERNEL_DIR.mkdir(exist_ok=True, parents=True)
+    prefix = Path(appdirs.user_data_dir()).parent
+    args = f'name="{name}", displayname="{display_name}", prefix="{prefix}"'
+    commands = [
+        'install.packages("IRkernel", repos = "http://cran.us.r-project.org")',
+        'library("IRkernel")',
+        f"IRkernel::installspec({args})",
     ]
-    for cmd in (cmd1, cmd2):
+    with TemporaryDirectory() as temp_dir:
+        exec_path = Path(temp_dir) / "exec.R"
+        with exec_path.open("w", encoding="utf-8") as stream:
+            for cmd in commands:
+                stream.write(f"{cmd}\n")
         try:
             res = run(
-                cmd, stdout=PIPE, stderr=PIPE, check=False, encoding="utf-8"
+                [
+                    "Rscript",
+                    "--verbose",
+                    f"{exec_path}",
+                ],
+                stdout=PIPE,
+                stderr=PIPE,
+                check=False,
+                encoding="utf-8",
             )
             return_code = res.returncode
             stdout, stderr = res.stdout, res.stderr
         except (NotADirectoryError, FileNotFoundError):
             return_code = 1
-            stdout, stderr = "", f"{cmd[0]}: No such file or directory"
+            stdout, stderr = "", "Rscript: No such file or directory"
         if return_code != 0:
+            logger.error("Script failed:\n\n%s", exec_path.read_text())
             raise CalledProcessError(
                 return_code,
-                " ".join(cmd),
+                "Rscript --verbose",
                 output=stdout,
                 stderr=stderr,
             )

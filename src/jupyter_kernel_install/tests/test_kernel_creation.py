@@ -8,8 +8,8 @@ from tempfile import TemporaryDirectory
 import mock
 import pytest
 
-from kernel_install import bash, python, r
-from kernel_install.install import get_ld_library_path_from_bin
+from jupyter_kernel_install import bash, python, r
+from jupyter_kernel_install.install import get_ld_library_path_from_bin
 
 
 def test_ld_library_path() -> None:

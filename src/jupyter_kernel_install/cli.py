@@ -9,7 +9,7 @@ from typing import Callable, Dict, List, Optional, cast
 from rich import print as pprint
 from rich_argparse import ArgumentDefaultsRichHelpFormatter
 
-from kernel_install import __version__, install
+from jupyter_kernel_install import __version__, install
 
 from .install import __all__ as methods
 from .logger import logger, logger_stream_handle

@@ -73,7 +73,7 @@ deps = -c {toxinidir}/.github/dependabot/constraints.txt
        -e .[dev]
 
 commands =
-    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
+    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/jupyter_kernel_install/tests
     python3 -m coverage report --fail-under=98.5 --precision=2
 
 [testenv:lint]

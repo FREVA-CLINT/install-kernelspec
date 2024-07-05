@@ -36,6 +36,11 @@ Options:
                         The display name of the kernel (default: None)
   --version, -V         Display version and exit
 ```
+Alternatively you can use:
+
+```console
+python -m jupyter_kernel_install --help
+```
 
 The following kernel specifications are supported:
 - python3

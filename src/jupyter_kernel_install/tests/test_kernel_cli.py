@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from kernel_install.cli import cli
+from jupyter_kernel_install.cli import cli
 
 
 def test_cli(python_kernel: Path) -> None:

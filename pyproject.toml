@@ -3,7 +3,7 @@ requires = ["flit_core >=3.2"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "kernel-install"
+name = "jupyter-kernel-install"
 authors = [{name = "DKRZ, Clint", email = "freva@dkrz.de"}]
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -38,10 +38,10 @@ Home= "https://github.com/FREVA-CLINT/install-kernelspec"
 
 
 [project.scripts]
-jupyter-kernel-install = "kernel_install.cli:cli"
+jupyter-kernel-install = "jupyter_kernel_install.cli:cli"
 
 [tool.mypy]
-files = "src/kernel_install"
+files = "src/jupyter_kernel_install"
 strict = true
 warn_unused_ignores = true
 warn_unreachable = true
@@ -73,7 +73,7 @@ deps = -c {toxinidir}/.github/dependabot/constraints.txt
        -e .[dev]
 
 commands =
-    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/kernel_install/tests
+    python3 -m pytest -vv --cov=src --cov-report=html:coverage_report --junitxml report.xml --cov-report xml src/jupyter_kernel_install/tests
     python3 -m coverage report --fail-under=98.5 --precision=2
 
 [testenv:lint]
@@ -84,8 +84,8 @@ deps = .[dev]
        pylint
 commands =
     isort --check --profile black -t py312 -l 79 src
-    flake8 src/kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
-    pylint src/kernel_install --fail-under 9
+    flake8 src/jupyter_kernel_install --count --max-complexity=5 --max-line-length=88 --statistics --show-source
+    pylint src/jupyter_kernel_install --fail-under 9
 [testenv:types]
 deps = .[dev]
        mypy
@@ -96,7 +96,7 @@ deps = git-python
        packaging
        requests
        tomli
-commands = python3 bump.py tag kernel_install -b main
+commands = python3 bump.py tag jupyter_kernel_install -b main
 allowlist_externals = rm
                       curl
 commands_pre = curl -H 'Cache-Control: no-cache' -Ls -o bump.py https://raw.githubusercontent.com/FREVA-CLINT/freva-deployment/versions/release.py

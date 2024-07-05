@@ -31,5 +31,5 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from .install import bash, python, r
 
-__version__ = "2404.0.1"
+__version__ = "2407.0.0"
 __all__ = ["bash", "r", "python"]

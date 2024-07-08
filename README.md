@@ -1,5 +1,5 @@
 # Install Kernel Specifications into userspace
-
+[![PyPI version](https://badge.fury.io/py/jupyter-kernel-install.svg)](https://badge.fury.io/py/jupyter-kernel-install)
 [![Pipeline](https://github.com/FREVA-CLINT/install-kernelspec/actions/workflows/ci_job.yml/badge.svg)](https://github.com/FREVA-CLINT/install-kernelspec/actions)
 [![codecov](https://codecov.io/gh/FREVA-CLINT/install-kernelspec/graph/badge.svg?token=90RyY5I9AI)](https://codecov.io/gh/FREVA-CLINT/install-kernelspec)
 [![BSD](https://anaconda.org/conda-forge/freva/badges/license.svg)](https://github.com/FREVA-CLINT/install-kernelspec/LICENSE)
@@ -10,7 +10,7 @@ of DKRZ.
 
 ## Installation
 ```python
-python3 -m pip install kernel-install
+python3 -m pip install jupyter-kernel-install
 ```
 
 ## Usage
@@ -50,7 +50,7 @@ The following kernel specifications are supported:
 Example for installing a gnuR kernel:
 
 ```console
-kernel-install r --name r-regiklim --display-name "R for Regiklim"
+jupyter-kernel-install r --name r-regiklim --display-name "R for Regiklim"
 ```
 
 ### Using the python library
@@ -58,7 +58,7 @@ kernel-install r --name r-regiklim --display-name "R for Regiklim"
 Example for programmatically installing a bash kernel:
 
 ```python
-import kernel_install as ki
+import jupyter_kernel_install as ki
 kernel_path = ki.bash(name="bash-regiklim", display_name="bash kernel")
 ```
 

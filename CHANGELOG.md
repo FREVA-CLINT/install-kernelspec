@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [v2407.0.0]
+## [v2407.0.1]
 ### Changed
 - Renamed python module `kernel_install` -> `jupyter_kernel_install`
 

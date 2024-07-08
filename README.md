@@ -10,7 +10,7 @@ of DKRZ.
 
 ## Installation
 ```python
-python3 -m pip install kernel-install
+python3 -m pip install jupyter-kernel-install
 ```
 
 ## Usage
@@ -50,7 +50,7 @@ The following kernel specifications are supported:
 Example for installing a gnuR kernel:
 
 ```console
-kernel-install r --name r-regiklim --display-name "R for Regiklim"
+jupyter-kernel-install r --name r-regiklim --display-name "R for Regiklim"
 ```
 
 ### Using the python library
@@ -58,7 +58,7 @@ kernel-install r --name r-regiklim --display-name "R for Regiklim"
 Example for programmatically installing a bash kernel:
 
 ```python
-import kernel_install as ki
+import jupyter_kernel_install as ki
 kernel_path = ki.bash(name="bash-regiklim", display_name="bash kernel")
 ```
 
